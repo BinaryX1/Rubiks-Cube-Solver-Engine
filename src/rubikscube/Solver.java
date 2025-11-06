@@ -3,8 +3,17 @@ package rubikscube;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.PriorityQueue;
+import java.util.HashSet;
 
 public class Solver {
+
+    public static String Solve(cubeState start){
+        PriorityQueue<cubeState> queue = new PriorityQueue<>();
+        HashSet<cubeState> visited = new HashSet<>();
+        return "deez";
+    }
+
 	public static void main(String[] args) {
 
 		if (args.length < 2) {
@@ -20,7 +29,9 @@ public class Solver {
         File input = new File(args[0]);
         try{
             RubiksCube cube = new RubiksCube(args[0]);
+            System.out.println(cube.hashCode());
             System.out.println(cube.toString());
+            System.out.println(cube.clone());
         }
         catch (IOException e){
             System.out.println("Could not open file");
@@ -28,5 +39,6 @@ public class Solver {
         catch(IncorrectFormatException e){
             System.out.println("Wrong format");
         }
+
     }
 }

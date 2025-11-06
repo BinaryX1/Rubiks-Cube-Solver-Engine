@@ -212,5 +212,17 @@ public class RubiksCube {
         }while(!cube.isSolved());
         return n;
     }
+
+    @Override
+    public int hashCode(){
+        return Arrays.hashCode(arr);
+    }
+
+    @Override
+    public RubiksCube clone(){
+        RubiksCube clone = new RubiksCube();
+        clone.arr = Arrays.copyOf(arr, arr.length);
+        return clone;
+    }
 }
 

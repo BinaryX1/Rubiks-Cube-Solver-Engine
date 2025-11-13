@@ -213,6 +213,7 @@ public class RubiksCube {
         return n;
     }
 
+
     @Override
     public int hashCode(){
         return Arrays.hashCode(arr);
@@ -223,6 +224,10 @@ public class RubiksCube {
         RubiksCube clone = new RubiksCube();
         clone.arr = Arrays.copyOf(arr, arr.length);
         return clone;
+    }
+
+    public char[] getArr(){
+        return arr;
     }
 }
 

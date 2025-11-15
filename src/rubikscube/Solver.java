@@ -24,11 +24,17 @@ public class Solver {
                 neighbour.distance = current.distance+1;
                 neighbour.score = neighbour.heuristic + neighbour.distance;
                 if(neighbour.cube.isSolved()){
+                    StringBuilder Solution = new StringBuilder();
+                    while(neighbour.parent != null){
+                        Solution.append(neighbour.Move);
+                        neighbour = neighbour.parent;
+                    }
                     long endTime = System.nanoTime();
                     long totalTimeNanos = endTime - startTime;
                     double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;
                     System.out.println("Execution time in milliseconds: " + totalTimeMillis);
-                    return neighbour.previousMoves;
+                    Solution.reverse();
+                    return Solution.toString();
                 }
                 else if(openmap.get(neighbour) != null && openmap.get(neighbour) >= neighbour.score){
                     openmap.put(neighbour, neighbour.score);
@@ -67,7 +73,6 @@ public class Solver {
             System.out.println(cube.hashCode());
             System.out.println(cube.toString());
             System.out.println(cube.clone());
-//            System.out.println(Solve(start));
             start.cube.applyMoves(Solve(start));
             System.out.println(start.cube.toString());
         }

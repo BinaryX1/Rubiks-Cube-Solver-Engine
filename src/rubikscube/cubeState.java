@@ -10,7 +10,7 @@ public class cubeState implements Comparable<cubeState>{
     public int distance;
     String previousMoves;
     public int score;
-
+    String Move;
     cubeState(RubiksCube cube){
         this.cube = cube;
         this.parent = null;
@@ -23,6 +23,14 @@ public class cubeState implements Comparable<cubeState>{
         this.parent = parent;
         this.heuristic = CalculateHeuristic();
         this.previousMoves = "";
+    }
+
+    cubeState(RubiksCube cube, cubeState parent, String move){
+        this.cube = cube;
+        this.parent = parent;
+        this.heuristic = CalculateHeuristic();
+        this.previousMoves = "";
+        this.Move = move;
     }
 
     private int CalculateHeuristic(){
@@ -50,8 +58,8 @@ public class cubeState implements Comparable<cubeState>{
         for(String move : moves){
             temp.copyFrom(this.cube);
             temp.applyMoves(move);
-            cubeState tempState = new cubeState(temp.clone(), this);
-            tempState.previousMoves = this.previousMoves + move;
+            cubeState tempState = new cubeState(temp.clone(), this, move);
+//            tempState.previousMoves = this.previousMoves + move;
             neighbours.add(tempState);
         }
         return neighbours;

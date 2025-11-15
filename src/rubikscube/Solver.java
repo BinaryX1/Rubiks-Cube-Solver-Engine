@@ -8,6 +8,7 @@ import java.util.*;
 public class Solver {
 
     public static String Solve(cubeState start){
+        long startTime = System.nanoTime();
         PriorityQueue<cubeState> openqueue = new PriorityQueue<>();
         HashMap<cubeState, Integer> openmap = new HashMap<>(); //Stores the smallest scores (heuristic+distance) of each cubestate
         HashMap<cubeState, Integer> visited = new HashMap<>();
@@ -23,6 +24,10 @@ public class Solver {
                 neighbour.distance = current.distance+1;
                 neighbour.score = neighbour.heuristic + neighbour.distance;
                 if(neighbour.cube.isSolved()){
+                    long endTime = System.nanoTime();
+                    long totalTimeNanos = endTime - startTime;
+                    double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;
+                    System.out.println("Execution time in milliseconds: " + totalTimeMillis);
                     return neighbour.previousMoves;
                 }
                 else if(openmap.get(neighbour) != null && openmap.get(neighbour) >= neighbour.score){
@@ -62,8 +67,8 @@ public class Solver {
             System.out.println(cube.hashCode());
             System.out.println(cube.toString());
             System.out.println(cube.clone());
-            System.out.println(Solve(start));
-            start.cube.applyMoves("FBBB");
+//            System.out.println(Solve(start));
+            start.cube.applyMoves(Solve(start));
             System.out.println(start.cube.toString());
         }
         catch (IOException e){

@@ -39,34 +39,50 @@ public class cubeState implements Comparable<cubeState>{
 
     public HashSet<cubeState> getNeighbours(){
         HashSet<cubeState> neighbours = new HashSet<cubeState>();
-        cubeState Fneighbour = new cubeState(cube.clone(), this);
-        cubeState Bneighbour = new cubeState(cube.clone(), this);
-        cubeState Rneighbour = new cubeState(cube.clone(), this);
-        cubeState Lneighbour = new cubeState(cube.clone(), this);
-        cubeState Uneighbour = new cubeState(cube.clone(), this);
-        cubeState Dneighbour = new cubeState(cube.clone(), this);
-
-        Fneighbour.cube.applyMoves("F");
-        Fneighbour.previousMoves = this.previousMoves + "F";
-        Bneighbour.cube.applyMoves("B");
-        Bneighbour.previousMoves = this.previousMoves + "B";
-        Rneighbour.cube.applyMoves("R");
-        Rneighbour.previousMoves = this.previousMoves + "R";
-        Lneighbour.cube.applyMoves("L");
-        Lneighbour.previousMoves = this.previousMoves + "L";
-        Uneighbour.cube.applyMoves("U");
-        Uneighbour.previousMoves = this.previousMoves + "U";
-        Dneighbour.cube.applyMoves("D");
-        Dneighbour.previousMoves = this.previousMoves + "D";
-
-        neighbours.add(Fneighbour);
-        neighbours.add(Bneighbour);
-        neighbours.add(Rneighbour);
-        neighbours.add(Lneighbour);
-        neighbours.add(Uneighbour);
-        neighbours.add(Dneighbour);
-
+        String[] moves = new String[6];
+        moves[0] = "F";
+        moves[1] = "B";
+        moves[2] = "R";
+        moves[3] = "L";
+        moves[4] = "U";
+        moves[5] = "D";
+        RubiksCube temp = new RubiksCube();
+        for(String move : moves){
+            temp.copyFrom(this.cube);
+            temp.applyMoves(move);
+            cubeState tempState = new cubeState(temp.clone(), this);
+            tempState.previousMoves = this.previousMoves + move;
+            neighbours.add(tempState);
+        }
         return neighbours;
+//        cubeState Fneighbour = new cubeState(cube.clone(), this);
+//        cubeState Bneighbour = new cubeState(cube.clone(), this);
+//        cubeState Rneighbour = new cubeState(cube.clone(), this);
+//        cubeState Lneighbour = new cubeState(cube.clone(), this);
+//        cubeState Uneighbour = new cubeState(cube.clone(), this);
+//        cubeState Dneighbour = new cubeState(cube.clone(), this);
+//
+//        Fneighbour.cube.applyMoves("F");
+//        Fneighbour.previousMoves = this.previousMoves + "F";
+//        Bneighbour.cube.applyMoves("B");
+//        Bneighbour.previousMoves = this.previousMoves + "B";
+//        Rneighbour.cube.applyMoves("R");
+//        Rneighbour.previousMoves = this.previousMoves + "R";
+//        Lneighbour.cube.applyMoves("L");
+//        Lneighbour.previousMoves = this.previousMoves + "L";
+//        Uneighbour.cube.applyMoves("U");
+//        Uneighbour.previousMoves = this.previousMoves + "U";
+//        Dneighbour.cube.applyMoves("D");
+//        Dneighbour.previousMoves = this.previousMoves + "D";
+//
+//        neighbours.add(Fneighbour);
+//        neighbours.add(Bneighbour);
+//        neighbours.add(Rneighbour);
+//        neighbours.add(Lneighbour);
+//        neighbours.add(Uneighbour);
+//        neighbours.add(Dneighbour);
+//
+//        return neighbours;
     }
 
     @Override

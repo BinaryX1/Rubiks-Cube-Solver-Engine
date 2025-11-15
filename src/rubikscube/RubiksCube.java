@@ -226,6 +226,10 @@ public class RubiksCube {
         return clone;
     }
 
+    public void copyFrom(RubiksCube other){
+        this.arr = Arrays.copyOf(other.arr, other.arr.length);
+    }
+
     public char[] getArr(){
         return arr;
     }

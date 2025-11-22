@@ -1,9 +1,69 @@
 package rubikscube;
 
-import java.util.HashSet;
+import java.util.*;
 
 public class cubeState implements Comparable<cubeState>{
-    public static RubiksCube solvedState = new RubiksCube();
+    class cornercubie {
+        char a, b, c;
+        public String originalcorner;
+        int orientation;
+        public String truecorner;
+        public cornercubie(int index1, int index2, int index3, String type){
+            char[] faces = cube.getArr();
+            a = faces[index1];
+            b = faces[index2];
+            c = faces[index3];
+            originalcorner = type;
+            truecorner = identifyCubie(a, b, c);
+            orientation = orientcorner(index1, index2, index3);
+        }
+
+        private int orientcorner(int index1, int index2, int index3){
+            char[] faces = cube.getArr();
+            int[] indices = {index1, index2, index3};
+            for(int i : indices) {
+                char s = faces[i];
+                if(s == 'O' || s == 'R'){
+                    if(i < 9){
+                        return 0;
+                    }
+                    else if(i >= 45){
+                        return 0;
+                    }
+                    else if((i >= 9 && i <= 11) || (i>=21 && i<=23) || (i>=33 && i <= 35)){ //On left face (G)
+                        return 1;
+                    }
+                    else if((i >= 15 && i<= 17) || (i>=27 && i<=29) || (i>=39 && i<= 41)){ //On right face (B)
+                        return 1;
+                    }
+                    else if ((i >= 12 && i<= 14) || (i >= 24 && i <= 26) || (i >= 36 && i <= 38)) //On front face (W)
+                        return 2;
+                    else //On back face (Y)
+                        return 2;
+                }
+            }
+            return 0;
+        }
+
+        private String identifyCubie(char a, char b, char c) {
+            // convert to set for comparison
+            Set<Character> s = Set.of(a, b, c);
+
+            if (s.equals(Set.of('O','B','W'))) return "URF";
+            if (s.equals(Set.of('O','W','G'))) return "UFL";
+            if (s.equals(Set.of('O','G','Y'))) return "ULB";
+            if (s.equals(Set.of('O','Y','B'))) return "UBR";
+
+            if (s.equals(Set.of('R','W','B'))) return "DFR";
+            if (s.equals(Set.of('R','G','W'))) return "DLF";
+            if (s.equals(Set.of('R','Y','G'))) return "DBL";
+            if (s.equals(Set.of('R','B','Y'))) return "DRB";
+            System.out.println("CRASH! Found impossible corner with colors: " + s + originalcorner);
+            System.out.println(cube.toString());
+            throw new IllegalStateException("Unknown corner");
+        }
+    }
+    public static char[] solved = new RubiksCube().getArr();
     RubiksCube cube;
     cubeState parent;
     public int heuristic;
@@ -11,11 +71,22 @@ public class cubeState implements Comparable<cubeState>{
     String previousMoves;
     public int score;
     String Move;
+
+    cornercubie[] corners;
     cubeState(RubiksCube cube){
         this.cube = cube;
         this.parent = null;
-        this.heuristic = CalculateHeuristic();
         this.previousMoves = "";
+        this.corners = new cornercubie[8];
+        corners[0] = new cornercubie(8, 15, 14, "URF");
+        corners[1] = new cornercubie(6, 11, 12, "ULF");
+        corners[2] = new cornercubie(0, 9, 20, "ULB");
+        corners[3] = new cornercubie(2, 17, 18, "URB");
+        corners[4] = new cornercubie(47, 39, 38, "DRF");
+        corners[5] = new cornercubie(45, 35, 36, "DLF");
+        corners[6] = new cornercubie(51, 33, 44, "DLB");
+        corners[7] = new cornercubie(53, 41, 42, "DRB");
+        this.heuristic = CalculateHeuristic();
     }
 
     cubeState(RubiksCube cube, cubeState parent){
@@ -28,21 +99,120 @@ public class cubeState implements Comparable<cubeState>{
     cubeState(RubiksCube cube, cubeState parent, String move){
         this.cube = cube;
         this.parent = parent;
-        this.heuristic = CalculateHeuristic();
         this.previousMoves = "";
         this.Move = move;
+        this.corners = new cornercubie[8];
+        corners[0] = new cornercubie(8, 15, 14, "URF");
+        corners[1] = new cornercubie(6, 11, 12, "ULF");
+        corners[2] = new cornercubie(0, 9, 20, "ULB");
+        corners[3] = new cornercubie(2, 17, 18, "URB");
+        corners[4] = new cornercubie(47, 39, 38, "DRF");
+        corners[5] = new cornercubie(45, 35, 36, "DLF");
+        corners[6] = new cornercubie(51, 33, 44, "DLB");
+        corners[7] = new cornercubie(53, 41, 42, "DRB");
+        this.heuristic = CalculateHeuristic();
     }
 
     private int CalculateHeuristic(){
         int score = 0;
         char[] faces = cube.getArr();
-        char[] solved = solvedState.getArr();
         for(int i = 0; i < faces.length; i++){
             if(faces[i]!=solved[i]){
                 score++;
             }
         }
         return score;
+//        int cornerscore = 0;
+//        int edgescore = 0;
+//        for(cornercubie c : corners){
+//            if(!Objects.equals(c.truecorner, c.originalcorner)){
+//                cornerscore++;
+//            }
+//        }
+//
+//        edgescore += edgescore(3, 10);
+//        edgescore += edgescore(1, 19);
+//        edgescore += edgescore(5, 16);
+//        edgescore += edgescore(23, 24);
+//        edgescore += edgescore(26, 27);
+//        edgescore += edgescore(37, 46);
+//        edgescore += edgescore(7, 13);
+//        edgescore += edgescore(34, 48);
+//        edgescore += edgescore(50, 40);
+//        edgescore += edgescore(52, 43);
+//        edgescore += edgescore(21, 32);
+//        edgescore += edgescore(29, 30);
+////
+////
+//        return edgescore + cornerscore;
+    }
+
+    char faceOfIndex(int idx) {
+        if (idx >= 0 && idx <= 8) return 'U';
+        if (idx >= 9 && idx <= 35) {
+            if ((idx >= 9 && idx <= 11) || (idx >= 21 && idx <= 23) || (idx >= 33 && idx <= 35)) return 'L';
+            else if ((idx >= 12 && idx <= 14) || (idx >= 24 && idx <= 26) || (idx >= 36 && idx <= 38)) return 'F';
+            else if ((idx >= 15 && idx <= 17) || (idx >= 27 && idx <= 29) || (idx >= 39 && idx <= 41)) return 'R';
+            else if ((idx >= 18 && idx <= 20) || (idx >= 30 && idx <= 32) || (idx >= 42 && idx <= 44)) return 'B';
+        }
+        if (idx >= 45 && idx <= 53) return 'D';
+        return '?';
+    }
+
+    private int edgescore(int index1, int index2){
+        int score = 0;
+        char[] faces = cube.getArr();
+        Set<Character> solvedEdge = new HashSet<>();
+        solvedEdge.add(solved[index1]);
+        solvedEdge.add(solved[index2]);
+        Set<Character> realEdge = new HashSet<>();
+        realEdge.add(faces[index1]);
+        realEdge.add(faces[index2]);
+        if(!solvedEdge.equals(realEdge)){
+            score+=1;
+        }
+        return score;
+    }
+    // orientation for one edge given the two sticker indices for that edge and the cube array.
+// return 0 if oriented, 1 if flipped (using UD color rule with U='O', D='R')
+    int edgeOrientation(int idxA, int idxB) {
+        char[] faces = cube.getArr();
+        char a = faces[idxA];
+        char b = faces[idxB];
+        // UD colors in your cube:
+        char Ucolor = 'O';
+        char Dcolor = 'R';
+
+        // If one sticker is U or D color, use that sticker to decide orientation
+        if (a == Ucolor || a == Dcolor) {
+            char face = faceOfIndex(idxA);
+            if (face == 'U' || face == 'D') return 0;
+            else return 1;
+        }
+        if (b == Ucolor || b == Dcolor) {
+            char face = faceOfIndex(idxB);
+            if (face == 'U' || face == 'D') return 0;
+            else return 1;
+        }
+
+        // Otherwise (no U/D color on this edge) — use the F/B convention:
+        // find the sticker that belongs to F or B (your F color is 'W', B color is 'Y')
+        // and check if it currently sits on F or B face.
+        char Fcolor = 'W';
+        char Bcolor = 'Y';
+        if (a == Fcolor || a == Bcolor) {
+            char face = faceOfIndex(idxA);
+            if (face == 'F' || face == 'B') return 0;
+            else return 1;
+        }
+        if (b == Fcolor || b == Bcolor) {
+            char face = faceOfIndex(idxB);
+            if (face == 'F' || face == 'B') return 0;
+            else return 1;
+        }
+
+        // fallback (shouldn't happen on a valid cube)
+        return 0;
     }
 
     public HashSet<cubeState> getNeighbours(){
@@ -63,34 +233,6 @@ public class cubeState implements Comparable<cubeState>{
             neighbours.add(tempState);
         }
         return neighbours;
-//        cubeState Fneighbour = new cubeState(cube.clone(), this);
-//        cubeState Bneighbour = new cubeState(cube.clone(), this);
-//        cubeState Rneighbour = new cubeState(cube.clone(), this);
-//        cubeState Lneighbour = new cubeState(cube.clone(), this);
-//        cubeState Uneighbour = new cubeState(cube.clone(), this);
-//        cubeState Dneighbour = new cubeState(cube.clone(), this);
-//
-//        Fneighbour.cube.applyMoves("F");
-//        Fneighbour.previousMoves = this.previousMoves + "F";
-//        Bneighbour.cube.applyMoves("B");
-//        Bneighbour.previousMoves = this.previousMoves + "B";
-//        Rneighbour.cube.applyMoves("R");
-//        Rneighbour.previousMoves = this.previousMoves + "R";
-//        Lneighbour.cube.applyMoves("L");
-//        Lneighbour.previousMoves = this.previousMoves + "L";
-//        Uneighbour.cube.applyMoves("U");
-//        Uneighbour.previousMoves = this.previousMoves + "U";
-//        Dneighbour.cube.applyMoves("D");
-//        Dneighbour.previousMoves = this.previousMoves + "D";
-//
-//        neighbours.add(Fneighbour);
-//        neighbours.add(Bneighbour);
-//        neighbours.add(Rneighbour);
-//        neighbours.add(Lneighbour);
-//        neighbours.add(Uneighbour);
-//        neighbours.add(Dneighbour);
-//
-//        return neighbours;
     }
 
     @Override

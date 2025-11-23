@@ -139,6 +139,7 @@ public class RubiksCube {
         swap(43, 40, 37, 34);
         swap(44, 41, 38, 35);
 
+
         // Ensure this rotates indices 45-53 Clockwise
         rotateFace(Faces[5]);
     }

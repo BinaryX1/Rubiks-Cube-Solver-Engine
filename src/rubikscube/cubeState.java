@@ -3,6 +3,30 @@ package rubikscube;
 import java.util.*;
 
 public class cubeState implements Comparable<cubeState>{
+    static final int[][] CORNER_DIST = {
+            {0, 1, 1, 1, 1, 1, 2, 1}, // Row 0: URF
+            {1, 0, 1, 1, 1, 1, 1, 2}, // Row 1: UFL
+            {1, 1, 0, 1, 2, 1, 1, 1}, // Row 2: ULB
+            {1, 1, 1, 0, 1, 2, 1, 1}, // Row 3: UBR
+            {1, 1, 2, 1, 0, 1, 1, 1}, // Row 4: DFR
+            {1, 1, 1, 2, 1, 0, 1, 1}, // Row 5: DLF
+            {2, 1, 1, 1, 1, 1, 0, 1}, // Row 6: DBL
+            {1, 2, 1, 1, 1, 1, 1, 0}, // Row 7: DRB
+    };
+    static final int[][] EDGE_DIST = {
+            {0, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 2}, // Row 0: UL
+            {1, 0, 1, 1, 2, 2, 1, 1, 2, 1, 2, 2}, // Row 1: UR
+            {1, 1, 0, 1, 1, 2, 1, 2, 2, 2, 1, 2}, // Row 2: UB
+            {1, 1, 1, 0, 2, 1, 2, 1, 2, 2, 2, 1}, // Row 3: UF
+            {1, 2, 1, 2, 0, 1, 1, 2, 1, 2, 1, 2}, // Row 4: LB
+            {1, 2, 2, 1, 1, 0, 2, 1, 1, 2, 2, 1}, // Row 5: LF
+            {2, 1, 1, 2, 1, 2, 0, 1, 2, 1, 1, 2}, // Row 6: RB
+            {2, 1, 2, 1, 2, 1, 1, 0, 2, 1, 2, 1}, // Row 7: RF
+            {1, 2, 2, 2, 1, 1, 2, 2, 0, 1, 1, 1}, // Row 8: DL
+            {2, 1, 2, 2, 2, 2, 1, 1, 1, 0, 1, 1}, // Row 9: DR
+            {2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 0, 1}, // Row 10: DB
+            {2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 0}, // Row 11: DF
+    };
     class edgecubie{
         char a, b;
         public String originaledge;
@@ -158,12 +182,12 @@ public class cubeState implements Comparable<cubeState>{
         this.previousMoves = "";
         this.corners = new cornercubie[8];
         corners[0] = new cornercubie(8, 15, 14, "URF");
-        corners[1] = new cornercubie(6, 11, 12, "ULF");
+        corners[1] = new cornercubie(6, 11, 12, "UFL");
         corners[2] = new cornercubie(0, 9, 20, "ULB");
-        corners[3] = new cornercubie(2, 17, 18, "URB");
-        corners[4] = new cornercubie(47, 39, 38, "DRF");
+        corners[3] = new cornercubie(2, 17, 18, "UBR");
+        corners[4] = new cornercubie(47, 39, 38, "DFR");
         corners[5] = new cornercubie(45, 35, 36, "DLF");
-        corners[6] = new cornercubie(51, 33, 44, "DLB");
+        corners[6] = new cornercubie(51, 33, 44, "DBL");
         corners[7] = new cornercubie(53, 41, 42, "DRB");
         this.edges = new edgecubie[12];
         edges[0] = new edgecubie(3, 10, "UL");
@@ -195,12 +219,12 @@ public class cubeState implements Comparable<cubeState>{
         this.Move = move;
         this.corners = new cornercubie[8];
         corners[0] = new cornercubie(8, 15, 14, "URF");
-        corners[1] = new cornercubie(6, 11, 12, "ULF");
+        corners[1] = new cornercubie(6, 11, 12, "UFL");
         corners[2] = new cornercubie(0, 9, 20, "ULB");
-        corners[3] = new cornercubie(2, 17, 18, "URB");
-        corners[4] = new cornercubie(47, 39, 38, "DRF");
+        corners[3] = new cornercubie(2, 17, 18, "UBR");
+        corners[4] = new cornercubie(47, 39, 38, "DFR");
         corners[5] = new cornercubie(45, 35, 36, "DLF");
-        corners[6] = new cornercubie(51, 33, 44, "DLB");
+        corners[6] = new cornercubie(51, 33, 44, "DBL");
         corners[7] = new cornercubie(53, 41, 42, "DRB");
         this.edges = new edgecubie[12];
         edges[0] = new edgecubie(3, 10, "UL");
@@ -218,73 +242,66 @@ public class cubeState implements Comparable<cubeState>{
         this.heuristic = CalculateHeuristic();
     }
 
+    private int getCornerIndex(String name) {
+        switch(name) {
+            case "URF": return 0;
+            case "UFL": return 1;
+            case "ULB": return 2;
+            case "UBR": return 3;
+            case "DFR": return 4;
+            case "DLF": return 5;
+            case "DLB": return 6;
+            case "DRB": return 7;
+            default: return 0;
+        }
+    }
+
+    private int getEdgeIndex(String name) {
+        switch(name) {
+            case "UL": return 0;
+            case "UR": return 1;
+            case "UB": return 2;
+            case "UF": return 3;
+            case "LB": return 4;
+            case "LF": return 5;
+            case "RB": return 6;
+            case "RF": return 7;
+            case "DL": return 8;
+            case "DR": return 9;
+            case "DB": return 10;
+            case "DF": return 11;
+            default: return 0;
+        }
+    }
+
     private int CalculateHeuristic(){
-//        int score = 0;
-//        char[] faces = cube.getArr();
-//        for(int i = 0; i < faces.length; i++){
-//            if(faces[i]!=solved[i]){
-//                score++;
-//            }
-//        }
-//        return score;
         int cornerscore = 0;
         int edgescore = 0;
         for(cornercubie c : corners){
-            if(c.orientation!=0){
-                cornerscore++;
-            }
+//            if(c.orientation!=0){
+//                cornerscore++;
+//            }
             if(!Objects.equals(c.truecorner, c.originalcorner)){
+                cornerscore += CORNER_DIST[getCornerIndex(c.truecorner)][getCornerIndex(c.originalcorner)];
+//                cornerscore++;
+            }
+            if(c.orientation!=0){
                 cornerscore++;
             }
         }
 
-//        edgescore += edgescore(3, 10);
-//
-//        edgescore += edgescore(1, 19);
-//
-//        edgescore += edgescore(5, 16);
-//
-//        edgescore += edgescore(23, 24);
-//
-//        edgescore += edgescore(26, 27);
-//
-//        edgescore += edgescore(37, 46);
-//
-//        edgescore += edgescore(7, 13);
-//
-//        edgescore += edgescore(34, 48);
-//
-//        edgescore += edgescore(50, 40);
-//
-//        edgescore += edgescore(52, 43);
-//
-//        edgescore += edgescore(21, 32);
-//
-//        edgescore += edgescore(29, 30);
-
         for(edgecubie e : edges){
-            if(e.orientation!=0){
-                edgescore++;
-            }
             if(!Objects.equals(e.trueedge, e.originaledge)){
+                edgescore += EDGE_DIST[getEdgeIndex(e.trueedge)][getEdgeIndex(e.originaledge)];
+//                edgescore++;
+            }
+            if(e.orientation!=0){
                 edgescore++;
             }
         }
         int movesForCorners = (int) Math.ceil(cornerscore / 4.0);
         int movesForEdges = (int) Math.ceil(edgescore / 4.0);
-        return movesForCorners + movesForEdges;
-    }
-
-    char faceOfIndex(int idx) {
-        if (idx >= 0 && idx <= 8) return 'U';
-        if (idx >= 9 && idx <= 35) {
-            if ((idx >= 9 && idx <= 11) || (idx >= 21 && idx <= 23) || (idx >= 33 && idx <= 35)) return 'L';
-            else if ((idx >= 12 && idx <= 14) || (idx >= 24 && idx <= 26) || (idx >= 36 && idx <= 38)) return 'F';
-            else if ((idx >= 15 && idx <= 17) || (idx >= 27 && idx <= 29) || (idx >= 39 && idx <= 41)) return 'R';
-            else if ((idx >= 18 && idx <= 20) || (idx >= 30 && idx <= 32) || (idx >= 42 && idx <= 44)) return 'B';
-        }
-        if (idx >= 45 && idx <= 53) return 'D';
-        return '?';
+        return Math.max(movesForCorners, movesForEdges);
     }
 
     private int edgescore(int index1, int index2){
@@ -300,47 +317,6 @@ public class cubeState implements Comparable<cubeState>{
             score+=1;
         }
         return score;
-    }
-    // orientation for one edge given the two sticker indices for that edge and the cube array.
-// return 0 if oriented, 1 if flipped (using UD color rule with U='O', D='R')
-    int edgeOrientation(int idxA, int idxB) {
-        char[] faces = cube.getArr();
-        char a = faces[idxA];
-        char b = faces[idxB];
-        // UD colors in your cube:
-        char Ucolor = 'O';
-        char Dcolor = 'R';
-
-        // If one sticker is U or D color, use that sticker to decide orientation
-        if (a == Ucolor || a == Dcolor) {
-            char face = faceOfIndex(idxA);
-            if (face == 'U' || face == 'D') return 0;
-            else return 1;
-        }
-        if (b == Ucolor || b == Dcolor) {
-            char face = faceOfIndex(idxB);
-            if (face == 'U' || face == 'D') return 0;
-            else return 1;
-        }
-
-        // Otherwise (no U/D color on this edge) — use the F/B convention:
-        // find the sticker that belongs to F or B (your F color is 'W', B color is 'Y')
-        // and check if it currently sits on F or B face.
-        char Fcolor = 'W';
-        char Bcolor = 'Y';
-        if (a == Fcolor || a == Bcolor) {
-            char face = faceOfIndex(idxA);
-            if (face == 'F' || face == 'B') return 0;
-            else return 1;
-        }
-        if (b == Fcolor || b == Bcolor) {
-            char face = faceOfIndex(idxB);
-            if (face == 'F' || face == 'B') return 0;
-            else return 1;
-        }
-
-        // fallback (shouldn't happen on a valid cube)
-        return 0;
     }
 
     public HashSet<cubeState> getNeighbours(){
@@ -374,10 +350,100 @@ public class cubeState implements Comparable<cubeState>{
             temp.copyFrom(this.cube);
             temp.applyMoves(move);
             cubeState tempState = new cubeState(temp.clone(), this, move);
-//            tempState.previousMoves = this.previousMoves + move;
             neighbours.add(tempState);
         }
         return neighbours;
+    }
+
+    public cornercubie getCornercubiebytruecorner(String corner){
+        for(cornercubie c : corners){
+            if(c.truecorner.equals(corner)){
+                return c;
+            }
+        }
+        throw new IllegalArgumentException("Wrong input");
+    }
+
+    public cornercubie getCornercubiebyoriginalcorner(String corner){
+        for(cornercubie c : corners){
+            if(c.originalcorner.equals(corner)){
+                return c;
+            }
+        }
+        throw new IllegalArgumentException("Wrong input");
+    }
+
+    public int getManhattandistance(String corner1, String corner2){
+        String startingcorner = getCornercubiebytruecorner(corner1).originalcorner;
+        Queue<cubeState> queue = new LinkedList<>();
+        queue.add(this);
+        int moves = 0;
+        while(!queue.isEmpty()){
+            cubeState cube = queue.poll();
+            cornercubie c1 = cube.getCornercubiebyoriginalcorner(startingcorner);
+            cornercubie c2 = cube.getCornercubiebytruecorner(corner2);
+            StringBuilder solution = new StringBuilder();
+            if(c1.equals(c2)){
+                if(cube.parent == null){
+                    return 0;
+                }
+                int parents = 0;
+                while(cube.parent!=null) {
+                    cube = cube.parent;
+                    parents++;
+                }
+                return parents;
+            }
+            for(cubeState state : cube.getNeighbours()){
+                queue.add(state);
+            }
+        }
+        return moves;
+    }
+
+    public edgecubie getEdgecubiebytrueedge(String edge){
+        for(edgecubie e : edges){
+            if(e.trueedge.equals(edge)){
+                return e;
+            }
+        }
+        throw new IllegalArgumentException("Wrong input");
+    }
+
+    public edgecubie getEdgecubiebyoriginaledge(String edge){
+        for(edgecubie e : edges){
+            if(e.originaledge.equals(edge)){
+                return e;
+            }
+        }
+        throw new IllegalArgumentException("Wrong input");
+    }
+
+    public int getManhattandistanceedge(String edge1, String edge2){
+        String startingedge = getEdgecubiebytrueedge(edge1).originaledge;
+        Queue<cubeState> queue = new LinkedList<>();
+        queue.add(this);
+        int moves = 0;
+        while(!queue.isEmpty()){
+            cubeState cube = queue.poll();
+            edgecubie c1 = cube.getEdgecubiebyoriginaledge(startingedge);
+            edgecubie c2 = cube.getEdgecubiebytrueedge(edge2);
+            if(c1.equals(c2)){
+                if(cube.parent == null){
+                    return 0;
+                }
+                int parents = 0;
+                while(cube.parent!=null) {
+                    cube = cube.parent;
+                    parents++;
+                }
+                return parents;
+            }
+            for(cubeState state : cube.getNeighbours()){
+                queue.add(state);
+            }
+        }
+        return moves;
     }
 
     @Override
@@ -392,5 +458,20 @@ public class cubeState implements Comparable<cubeState>{
         else{
             return -1;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        cubeState that = (cubeState) o;
+        // Delegate equality to the internal cube
+        return this.cube.equals(that.cube);
+    }
+
+    @Override
+    public int hashCode() {
+        // Delegate hash to the internal cube
+        return this.cube.hashCode();
     }
 }

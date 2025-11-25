@@ -7,6 +7,11 @@ import java.util.*;
 
 public class Solver {
 
+    public static String Solve1(cubeState start){
+
+        return "deez";
+    }
+
     public static String Solve(cubeState start){
         long startTime = System.nanoTime();
         PriorityQueue<cubeState> openqueue = new PriorityQueue<>();

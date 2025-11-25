@@ -131,10 +131,6 @@ public class RubiksCube {
     }
 
     private void applyD(){
-        // Order: Back(42), Right(39), Front(36), Left(33)
-        // Based on your swap logic (b->a, c->b...), this moves:
-        // Right->Back, Front->Right, Left->Front, Back->Left
-        // This is CLOCKWISE.
         swap(42, 39, 36, 33);
         swap(43, 40, 37, 34);
         swap(44, 41, 38, 35);

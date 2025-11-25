@@ -34,54 +34,55 @@ public class cubeState implements Comparable<cubeState>{
         int orientation;
         public edgecubie(int index1, int index2, String edge){
             char[] faces = cube.getArr();
-            originaledge = edge;
+//            originaledge = edge;
+            trueedge = edge;
             a = faces[index1];
             b = faces[index2];
-            trueedge = identifyEdge(a, b);
+//            trueedge = identifyEdge(a, b);
+            originaledge = identifyEdge(a, b);
             orientation = orientEdge(index1, index2);
         }
 
         private int orientEdge(int index1, int index2){
             char[] faces = cube.getArr();
             int[] indices = {index1, index2};
-            for(int i : indices){
-                if(faces[i] == 'O'){
-                    if(i <= 8){
+            for(int i : indices) {
+                if (faces[i] == 'O' || faces[i] == 'R') {
+                    if (i <= 8 || i >= 45) {
                         return 0;
                     }
-                    else{
+                    else {
                         return 1;
                     }
                 }
-                else if(faces[i] == 'R'){
-                    if(i >= 45){
-                        return 0;
-                    }
-                    else{
-                        return 1;
-                    }
-                }
-                else if(faces[i] == 'W'){
-                    if ((i >= 12 && i<= 14) || (i >= 24 && i <= 26) || (i >= 36 && i <= 38)){
-                        return 0;
-                    }
-                    else{
-                        return 1;
-                    }
-                }
-                else if(faces[i] == 'Y'){
-                    if ((i >= 18 && i <= 20) || (i >= 30 && i <= 32) || (i >= 42 && i <=44)){
-                        return 0;
-                    }
-                    else{
-                        return 1;
-                    }
-                }
-                continue;
+//                else if(faces[i] == 'W' || faces[i] == 'Y'){
+//                    boolean onFront = (i >= 12 && i<= 14) || (i >= 24 && i <= 26) || (i >= 36 && i <= 38);
+//                    boolean onBack = (i >= 18 && i <= 20) || (i >= 30 && i <= 32) || (i >= 42 && i <=44);
+//                    if(onFront || onBack){
+//                        return 0;
+//                    }
+//                    else{
+//                        return 1;
+//                    }
+//                }
             }
+            for(int i : indices){
+                if(faces[i] == 'W' || faces[i] == 'Y'){
+                    boolean onFront = (i >= 12 && i<= 14) || (i >= 24 && i <= 26) || (i >= 36 && i <= 38);
+                    boolean onBack = (i >= 18 && i <= 20) || (i >= 30 && i <= 32) || (i >= 42 && i <=44);
+                    if(onFront || onBack){
+                        return 0;
+                    }
+                    else{
+                        return 1;
+                    }
+                }
+            }
+
             System.out.println("Error: incorrect edge");
             return 1;
         }
+
 
         private String identifyEdge(char a, char b){
             Set<Character> s = Set.of(a, b);
@@ -115,8 +116,10 @@ public class cubeState implements Comparable<cubeState>{
             a = faces[index1];
             b = faces[index2];
             c = faces[index3];
-            originalcorner = type;
-            truecorner = identifyCubie(a, b, c);
+//            originalcorner = type;
+//            truecorner = identifyCubie(a, b, c);
+            truecorner = type;
+            originalcorner = identifyCubie(a, b, c);
             orientation = orientcorner(index1, index2, index3);
         }
 

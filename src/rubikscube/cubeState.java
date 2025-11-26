@@ -43,45 +43,49 @@ public class cubeState implements Comparable<cubeState>{
             orientation = orientEdge(index1, index2);
         }
 
-        private int orientEdge(int index1, int index2){
-            char[] faces = cube.getArr();
-            int[] indices = {index1, index2};
-            for(int i : indices) {
-                if (faces[i] == 'O' || faces[i] == 'R') {
-                    if (i <= 8 || i >= 45) {
-                        return 0;
-                    }
-                    else {
-                        return 1;
-                    }
-                }
-//                else if(faces[i] == 'W' || faces[i] == 'Y'){
-//                    boolean onFront = (i >= 12 && i<= 14) || (i >= 24 && i <= 26) || (i >= 36 && i <= 38);
-//                    boolean onBack = (i >= 18 && i <= 20) || (i >= 30 && i <= 32) || (i >= 42 && i <=44);
-//                    if(onFront || onBack){
-//                        return 0;
-//                    }
-//                    else{
-//                        return 1;
-//                    }
-//                }
-            }
-            for(int i : indices){
-                if(faces[i] == 'W' || faces[i] == 'Y'){
-                    boolean onFront = (i >= 12 && i<= 14) || (i >= 24 && i <= 26) || (i >= 36 && i <= 38);
-                    boolean onBack = (i >= 18 && i <= 20) || (i >= 30 && i <= 32) || (i >= 42 && i <=44);
-                    if(onFront || onBack){
-                        return 0;
-                    }
-                    else{
-                        return 1;
-                    }
-                }
+        private boolean inInspectionSpot(int i) {
+            // "Look at the U/D faces" (Indices 0-8 and 45-53)
+            if (i <= 8 || i >= 45){
+                return true;
             }
 
-            System.out.println("Error: incorrect edge");
-            return 1;
+            if (i == 24 || i == 26 || i == 30 || i == 32){
+                return true;
+            }
+
+            return false;
         }
+
+        private int orientEdge(int index1, int index2){
+            char[] faces = cube.getArr();
+            char checkFace;
+            char sideFace;
+            if(inInspectionSpot(index1)){
+                checkFace = faces[index1];
+                sideFace = faces[index2];
+            }
+            else if(inInspectionSpot(index2)){
+                checkFace = faces[index2];
+                sideFace = faces[index1];
+            }
+            else{
+                System.out.println("Error: invalid edge provided");
+                return 1;
+            }
+
+            if(checkFace == 'G' || checkFace == 'B'){
+                return 1;
+            }
+            else if(checkFace == 'W' || checkFace == 'Y'){
+                if(sideFace == 'O' || sideFace == 'R'){
+                    return 1;
+                }
+                return 0;
+            }
+
+            return 0;
+        }
+
 
 
         private String identifyEdge(char a, char b){

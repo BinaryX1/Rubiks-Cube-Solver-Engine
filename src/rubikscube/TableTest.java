@@ -4,6 +4,38 @@ import java.util.Arrays;
 public class TableTest {
 
     public static void main(String[] args) {
+//        // Test if F flips an ODD number of TRACKED edges (0-10)
+//        cubeState start = new cubeState(new RubiksCube());
+//        int startEO = Indexer.getEdgeOrientationIndex(start); // Should be 0
+//        System.out.println("startEO: " + startEO);
+//        RubiksCube afterF = new RubiksCube();
+//        afterF.applyMoves("F");
+//        cubeState stateF = new cubeState(afterF);
+//        int endEO = Indexer.getEdgeOrientationIndex(stateF);
+//        System.out.println("endEO: " + endEO);
+//
+//// Count flips
+//        int flips = Integer.bitCount(endEO);
+//        System.out.println("F Move flipped " + flips + " tracked edges.");
+//
+//// If flips is Even (0, 2, 4), you are stuck on one island.
+//// If flips is Odd (1, 3), you can reach all 2048 states.
+//
+        System.out.println("--- DEBUGGING F MOVE FLIPS ---");
+        RubiksCube cube = new RubiksCube();
+        cubeState start = new cubeState(cube);
+
+        cube.applyMoves("F");
+        cubeState next = new cubeState(cube);
+
+        int flipCount = 0;
+        for(int i = 0; i < 11; i++) { // Loop through tracked edges
+            if(start.edges[i].orientation != next.edges[i].orientation) {
+                System.out.println("Edge " + i + " (" + start.edges[i].originaledge + ") FLIPPED");
+                flipCount++;
+            }
+        }
+        System.out.println("Total Tracked Flips: " + flipCount);
         System.out.println("--- Testing Edge Orientation Table ---");
         // Create a dummy state to start generation
         RubiksCube solved = new RubiksCube();
@@ -125,23 +157,14 @@ public class TableTest {
      * Specific Logic Check for Slice
      */
     public static void testSliceBehavior(int[][] table) {
-        // Rule: The Slice Coordinate tracks if FR, FL, BL, BR are in the middle layer.
-        // Index 0 = All slice edges are in the middle layer.
 
-        // Phase 2 Moves: U, D, F2, B2, R2, L2
-        // These moves should NEVER take the cube out of Slice State 0.
+        int start = 425;
 
-        int start = 0; // Solved Slice
-
-        // Indices based on your moves array:
-        // Moves: F, B, R, L, U, D, FF, BB, RR, LL, UU, DD, FFF, BBB, RRR, LLL, UUU, DDD
-        // U=4, D=5
-        // F2=6, B2=7, R2=8, L2=9
-        int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17}; // U, D, F2, B2, R2, L2, U2, D2, U', D'
+        int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
 
         boolean passed = true;
         for (int move : phase2Moves) {
-            if (table[start][move] != 0) {
+            if (table[start][move] != 425) {
                 System.out.println("FAILED: Phase 2 move index " + move + " broke the Slice alignment!");
                 passed = false;
             }
@@ -151,7 +174,6 @@ public class TableTest {
             System.out.println("PASSED: Phase 2 moves (U, D, F2...) preserve Slice State 0.");
         }
 
-        // Check that F (0) breaks it
         if (table[start][0] != 0) {
             System.out.println("PASSED: Move F breaks Slice alignment (as expected).");
         } else {

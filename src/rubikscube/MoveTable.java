@@ -78,9 +78,9 @@ public class MoveTable {
     static int[][] sliceMoveTable(cubeState state){
         int[][] table = new int[495][18];
         boolean[] visited = new boolean[495];
-        for(int[] row : table) {
-            Arrays.fill(row, -1);
-        }
+//        for(int[] row : table) {
+//            Arrays.fill(row, -1);
+//        }
         Queue<cubeState> queue = new LinkedList<>();
         queue.add(state);
         visited[Indexer.getSliceIndex(state)] = true;
@@ -148,5 +148,6 @@ public class MoveTable {
         } else {
             System.out.println("Test 2 Failed: F then F' went to " + backHome);
         }
+        System.out.println(Indexer.getSliceIndex(state));
     }
 }

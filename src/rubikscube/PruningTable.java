@@ -75,6 +75,10 @@ public class PruningTable {
         return pruningtable;
     }
 
+    static byte[][] CornerPermutationSlicePruning(int[][] CPMoveTable, int[][] sliceMoveTable){
+        byte[][] pruningtable = new byte[2187][495];
+    }
+
     public static void main(String[] args){
         long startTime = System.nanoTime();
         RubiksCube cube = new RubiksCube();

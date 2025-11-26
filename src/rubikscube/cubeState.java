@@ -209,13 +209,13 @@ public class cubeState implements Comparable<cubeState>{
         edges[9] = new edgecubie(23, 24, "LF");
         edges[10] = new edgecubie(29, 30, "RB");
         edges[11] = new edgecubie(27, 26, "RF");
-        this.heuristic = CalculateHeuristic();
+//        this.heuristic = CalculateHeuristic();
     }
 
     cubeState(RubiksCube cube, cubeState parent){
         this.cube = cube;
         this.parent = parent;
-        this.heuristic = CalculateHeuristic();
+//        this.heuristic = CalculateHeuristic();
         this.previousMoves = "";
     }
 
@@ -258,7 +258,7 @@ public class cubeState implements Comparable<cubeState>{
         edges[9] = new edgecubie(23, 24, "LF");
         edges[10] = new edgecubie(29, 30, "RB");
         edges[11] = new edgecubie(27, 26, "RF");
-        this.heuristic = CalculateHeuristic();
+//        this.heuristic = CalculateHeuristic();
     }
 
     private int getCornerIndex(String name) {

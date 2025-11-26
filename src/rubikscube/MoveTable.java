@@ -108,7 +108,7 @@ public class MoveTable {
     }
 
     public static int[][] cornerPermutationMoveTable(cubeState state){
-        int[][] table = new int[40320][18];
+        int[][] table = new int[40320][10];
         for(int[] row : table){
             Arrays.fill(row, -1);
         }
@@ -116,19 +116,17 @@ public class MoveTable {
         Queue<cubeState> queue = new LinkedList<>();
         queue.add(state);
         visited[Indexer.getCornerPermutationIndex(state)] = true;
-        int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
-        String[] moves = {
-                "F", "B", "R", "L", "U", "D",
-                "FF", "BB", "RR", "LL", "UU", "DD",
-                "FFF", "BBB", "RRR", "LLL", "UUU", "DDD"
+//        int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
+        String[] phase2moves = {
+                "U", "D", "FF", "BB", "RR", "LL", "UU", "DD", "UUU", "DDD"
         };
         while(!queue.isEmpty()){
             cubeState current = queue.poll();
             int index = Indexer.getCornerPermutationIndex(current);
-            for(int m : phase2Moves){
+            for(int m = 0; m < 10; m++){
                 RubiksCube nextCube = new RubiksCube();
                 nextCube.copyFrom(current.cube);
-                nextCube.applyMoves(moves[m]);
+                nextCube.applyMoves(phase2moves[m]);
 
                 cubeState cube = new cubeState(nextCube);
                 int neighbourindex = Indexer.getCornerPermutationIndex(cube);
@@ -152,19 +150,22 @@ public class MoveTable {
         Queue<cubeState> queue = new LinkedList<>();
         queue.add(state);
         visited[Indexer.getEdgePermutationIndex(state)] = true;
-        int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
-        String[] moves = {
-                "F", "B", "R", "L", "U", "D",
-                "FF", "BB", "RR", "LL", "UU", "DD",
-                "FFF", "BBB", "RRR", "LLL", "UUU", "DDD"
+//        int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
+//        String[] moves = {
+//                "F", "B", "R", "L", "U", "D",
+//                "FF", "BB", "RR", "LL", "UU", "DD",
+//                "FFF", "BBB", "RRR", "LLL", "UUU", "DDD"
+//        };
+        String[] phase2moves = {
+                "U", "D", "FF", "BB", "RR", "LL", "UU", "DD", "UUU", "DDD"
         };
         while(!queue.isEmpty()){
             cubeState current = queue.poll();
             int index = Indexer.getEdgePermutationIndex(current);
-            for(int m : phase2Moves){
+            for(int m = 0; m < 10; m++){
                 RubiksCube nextCube = new RubiksCube();
                 nextCube.copyFrom(current.cube);
-                nextCube.applyMoves(moves[m]);
+                nextCube.applyMoves(phase2moves[m]);
 
                 cubeState cube = new cubeState(nextCube);
                 int neighbourindex = Indexer.getEdgePermutationIndex(cube);
@@ -180,7 +181,7 @@ public class MoveTable {
     }
 
     public static int[][] sliceEdgePermutationTable(cubeState state){
-        int[][] table = new int[24][18];
+        int[][] table = new int[24][10];
         for(int[] row : table){
             Arrays.fill(row, -1);
         }
@@ -189,23 +190,26 @@ public class MoveTable {
         queue.add(state);
         visited[Indexer.getSlicePermutationIndex(state)] = true;
         int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
-        String[] moves = {
-                "F", "B", "R", "L", "U", "D",
-                "FF", "BB", "RR", "LL", "UU", "DD",
-                "FFF", "BBB", "RRR", "LLL", "UUU", "DDD"
+//        String[] moves = {
+//                "F", "B", "R", "L", "U", "D",
+//                "FF", "BB", "RR", "LL", "UU", "DD",
+//                "FFF", "BBB", "RRR", "LLL", "UUU", "DDD"
+//        };
+        String[] phase2moves = {
+                "U", "D", "FF", "BB", "RR", "LL", "UU", "DD", "UUU", "DDD"
         };
         while(!queue.isEmpty()){
             cubeState current = queue.poll();
             int index = Indexer.getSlicePermutationIndex(current);
-            for(int m : phase2Moves){
+            for(int i = 0; i < 10; i++){
                 RubiksCube nextCube = new RubiksCube();
                 nextCube.copyFrom(current.cube);
-                nextCube.applyMoves(moves[m]);
+                nextCube.applyMoves(phase2moves[i]);
 
                 cubeState cube = new cubeState(nextCube);
                 int neighbourindex = Indexer.getSlicePermutationIndex(cube);
 
-                table[index][m] = neighbourindex;
+                table[index][i] = neighbourindex;
                 if(!visited[neighbourindex]){
                     visited[neighbourindex] = true;
                     queue.add(cube);
@@ -218,46 +222,46 @@ public class MoveTable {
 
     public static void main(String[] args){
         long startTime = System.nanoTime();
-//        System.out.println("--- Testing Phase 2 Corner Permutation Table ---");
-//
-//        // 1. Generate the Table
-//        RubiksCube solved = new RubiksCube();
-//        cubeState root = new cubeState(solved);
-//
-//        System.out.println("Generating CP Table...");
-//        int[][] cpTable = MoveTable.cornerPermutationMoveTable(root);
-//
-//        // 2. Verify Completeness
-//        // Valid Phase 2 Move Indices:
-//        // U(4), D(5), F2(6), B2(7), R2(8), L2(9), U2(10), D2(11), U'(16), D'(17)
-//        int[] validMoves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
-//
-//        int totalStates = 40320; // 8!
-//        int filledRows = 0;
-//        boolean flawless = true;
-//
-//        for (int i = 0; i < totalStates; i++) {
-//            boolean rowOk = true;
-//            for (int m : validMoves) {
-//                if (cpTable[i][m] == -1) {
-//                    rowOk = false;
-//                    flawless = false;
-//                    // System.out.println("Missing entry for State " + i + " at Move " + m);
-//                    // break; // Uncomment to spam console with errors
-//                }
-//            }
-//            if (rowOk) {
-//                filledRows++;
-//            }
-//        }
-//
-//        System.out.println("Filled Rows: " + filledRows + " / " + totalStates);
-//
-//        if (filledRows == totalStates) {
-//            System.out.println("PASSED: Corner Permutation graph is fully connected.");
-//        } else {
-//            System.out.println("FAILED: Some states were unreachable via Phase 2 moves.");
-//        }
+        System.out.println("--- Testing Phase 2 Corner Permutation Table ---");
+
+        // 1. Generate the Table
+        RubiksCube solved = new RubiksCube();
+        cubeState root = new cubeState(solved);
+
+        System.out.println("Generating CP Table...");
+        int[][] cpTable = MoveTable.cornerPermutationMoveTable(root);
+
+        // 2. Verify Completeness
+        // Valid Phase 2 Move Indices:
+        // U(4), D(5), F2(6), B2(7), R2(8), L2(9), U2(10), D2(11), U'(16), D'(17)
+        int[] validMoves = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+        int totalStates = 40320; // 8!
+        int filledRows = 0;
+        boolean flawless = true;
+
+        for (int i = 0; i < totalStates; i++) {
+            boolean rowOk = true;
+            for (int m : validMoves) {
+                if (cpTable[i][m] == -1) {
+                    rowOk = false;
+                    flawless = false;
+                    // System.out.println("Missing entry for State " + i + " at Move " + m);
+                    // break; // Uncomment to spam console with errors
+                }
+            }
+            if (rowOk) {
+                filledRows++;
+            }
+        }
+
+        System.out.println("Filled Rows: " + filledRows + " / " + totalStates);
+
+        if (filledRows == totalStates) {
+            System.out.println("PASSED: Corner Permutation graph is fully connected.");
+        } else {
+            System.out.println("FAILED: Some states were unreachable via Phase 2 moves.");
+        }
 
 //
 //        System.out.println("\n--- Testing Phase 2 Edge Permutation Table ---");
@@ -322,66 +326,66 @@ public class MoveTable {
 //        }
 
 
-        System.out.println("\n--- Testing Phase 2 Slice Permutation Table ---");
-
-        // 1. Generate
-        RubiksCube solved = new RubiksCube();
-        cubeState root = new cubeState(solved);
-
-        // NOTE: Replace 'MoveTable' with your class name
-        int[][] spTable = MoveTable.sliceEdgePermutationTable(root);
-
-        // 2. Verify Size
-        if (spTable.length != 24) {
-            System.out.println("FAILED: Wrong table size. Expected 24, got " + spTable.length);
-        } else {
-            System.out.println("PASSED: Table size is 24.");
-        }
+//        System.out.println("\n--- Testing Phase 2 Slice Permutation Table ---");
+//
+//        // 1. Generate
+//        RubiksCube solved = new RubiksCube();
+//        cubeState root = new cubeState(solved);
+//
+//        // NOTE: Replace 'MoveTable' with your class name
+//        int[][] spTable = MoveTable.sliceEdgePermutationTable(root);
+//
+//        // 2. Verify Size
+//        if (spTable.length != 24) {
+//            System.out.println("FAILED: Wrong table size. Expected 24, got " + spTable.length);
+//        } else {
+//            System.out.println("PASSED: Table size is 24.");
+//        }
 
         // 3. Verify Reachability & Logic
         // Moves: U, D, F2, B2, R2, L2, U2, D2, U', D'
         // Indices: 4, 5, 6, 7, 8, 9, 10, 11, 16, 17
-
-        int reachedStates = 0;
-        boolean constraintsPassed = true;
-        boolean udLogicPassed = true;
-
-        for (int i = 0; i < 24; i++) {
-            boolean rowOk = true;
-
-            // Check U/D moves (Should be Identity)
-            int[] udMoves = {4, 5, 10, 11, 16, 17};
-            for (int m : udMoves) {
-                if (spTable[i][m] != i) {
-                    // System.out.println("FAILED: Move " + m + " changed slice permutation! (Should be identity)");
-                    udLogicPassed = false;
-                }
-            }
-
-            // Check F2/B2/R2/L2 (Should allow changes)
-            int[] sliceMoves = {6, 7, 8, 9};
-            for (int m : sliceMoves) {
-                if (spTable[i][m] == -1) {
-                    rowOk = false;
-                }
-            }
-
-            if (rowOk) reachedStates++;
-        }
-
-        System.out.println("Total Reachable States: " + reachedStates + " / 24");
-
-        if (reachedStates == 24) {
-            System.out.println("PASSED: Slice Permutation Graph is fully connected.");
-        } else {
-            System.out.println("FAILED: Table is incomplete.");
-        }
-
-        if (udLogicPassed) {
-            System.out.println("PASSED: U/D moves preserve Slice Permutation (as expected).");
-        } else {
-            System.out.println("WARNING: U/D moves changed Slice Permutation (Check physics or indexer).");
-        }
+//
+//        int reachedStates = 0;
+//        boolean constraintsPassed = true;
+//        boolean udLogicPassed = true;
+//
+//        for (int i = 0; i < 24; i++) {
+//            boolean rowOk = true;
+//
+//            // Check U/D moves (Should be Identity)
+//            int[] udMoves = {4, 5, 10, 11, 16, 17};
+//            for (int m : udMoves) {
+//                if (spTable[i][m] != i) {
+//                    // System.out.println("FAILED: Move " + m + " changed slice permutation! (Should be identity)");
+//                    udLogicPassed = false;
+//                }
+//            }
+//
+//            // Check F2/B2/R2/L2 (Should allow changes)
+//            int[] sliceMoves = {6, 7, 8, 9};
+//            for (int m : sliceMoves) {
+//                if (spTable[i][m] == -1) {
+//                    rowOk = false;
+//                }
+//            }
+//
+//            if (rowOk) reachedStates++;
+//        }
+//
+//        System.out.println("Total Reachable States: " + reachedStates + " / 24");
+//
+//        if (reachedStates == 24) {
+//            System.out.println("PASSED: Slice Permutation Graph is fully connected.");
+//        } else {
+//            System.out.println("FAILED: Table is incomplete.");
+//        }
+//
+//        if (udLogicPassed) {
+//            System.out.println("PASSED: U/D moves preserve Slice Permutation (as expected).");
+//        } else {
+//            System.out.println("WARNING: U/D moves changed Slice Permutation (Check physics or indexer).");
+//        }
         long endTime = System.nanoTime();
         long totalTimeNanos = endTime - startTime;
         double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;

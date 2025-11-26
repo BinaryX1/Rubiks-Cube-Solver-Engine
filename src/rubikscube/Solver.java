@@ -72,6 +72,7 @@ public class Solver {
         return Math.max(edgedistance, cornerdistance);
     }
 
+
     public static String Solve(cubeState start){
         long startTime = System.nanoTime();
         PriorityQueue<cubeState> openqueue = new PriorityQueue<>();

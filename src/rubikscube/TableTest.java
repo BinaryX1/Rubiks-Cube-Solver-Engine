@@ -158,13 +158,13 @@ public class TableTest {
      */
     public static void testSliceBehavior(int[][] table) {
 
-        int start = 425;
+        int start = 0;
 
         int[] phase2Moves = {4, 5, 6, 7, 8, 9, 10, 11, 16, 17};
 
         boolean passed = true;
         for (int move : phase2Moves) {
-            if (table[start][move] != 425) {
+            if (table[start][move] != 0) {
                 System.out.println("FAILED: Phase 2 move index " + move + " broke the Slice alignment!");
                 passed = false;
             }

@@ -201,14 +201,14 @@ public class cubeState implements Comparable<cubeState>{
         edges[1] = new edgecubie(5, 16, "UR");
         edges[2] = new edgecubie(1, 19, "UB");
         edges[3] = new edgecubie(7, 13, "UF");
-        edges[4] = new edgecubie(21, 32, "LB");
-        edges[5] = new edgecubie(23, 24, "LF");
-        edges[6] = new edgecubie(29, 30, "RB");
-        edges[7] = new edgecubie(27, 26, "RF");
-        edges[8] = new edgecubie(48, 34, "DL");
-        edges[9] = new edgecubie(50, 40, "DR");
-        edges[10] = new edgecubie(52, 43, "DB");
-        edges[11] = new edgecubie(46, 37, "DF");
+        edges[4] = new edgecubie(48, 34, "DL");
+        edges[5] = new edgecubie(50, 40, "DR");
+        edges[6] = new edgecubie(52, 43, "DB");
+        edges[7] = new edgecubie(46, 37, "DF");
+        edges[8] = new edgecubie(21, 32, "LB");
+        edges[9] = new edgecubie(23, 24, "LF");
+        edges[10] = new edgecubie(29, 30, "RB");
+        edges[11] = new edgecubie(27, 26, "RF");
         this.heuristic = CalculateHeuristic();
     }
 
@@ -234,18 +234,30 @@ public class cubeState implements Comparable<cubeState>{
         corners[6] = new cornercubie(51, 33, 44, "DBL");
         corners[7] = new cornercubie(53, 41, 42, "DRB");
         this.edges = new edgecubie[12];
+//        edges[0] = new edgecubie(3, 10, "UL");
+//        edges[1] = new edgecubie(5, 16, "UR");
+//        edges[2] = new edgecubie(1, 19, "UB");
+//        edges[3] = new edgecubie(7, 13, "UF");
+//        edges[4] = new edgecubie(21, 32, "LB");
+//        edges[5] = new edgecubie(23, 24, "LF");
+//        edges[6] = new edgecubie(29, 30, "RB");
+//        edges[7] = new edgecubie(27, 26, "RF");
+//        edges[8] = new edgecubie(48, 34, "DL");
+//        edges[9] = new edgecubie(50, 40, "DR");
+//        edges[10] = new edgecubie(52, 43, "DB");
+//        edges[11] = new edgecubie(46, 37, "DF");
         edges[0] = new edgecubie(3, 10, "UL");
         edges[1] = new edgecubie(5, 16, "UR");
         edges[2] = new edgecubie(1, 19, "UB");
         edges[3] = new edgecubie(7, 13, "UF");
-        edges[4] = new edgecubie(21, 32, "LB");
-        edges[5] = new edgecubie(23, 24, "LF");
-        edges[6] = new edgecubie(29, 30, "RB");
-        edges[7] = new edgecubie(27, 26, "RF");
-        edges[8] = new edgecubie(48, 34, "DL");
-        edges[9] = new edgecubie(50, 40, "DR");
-        edges[10] = new edgecubie(52, 43, "DB");
-        edges[11] = new edgecubie(46, 37, "DF");
+        edges[4] = new edgecubie(48, 34, "DL");
+        edges[5] = new edgecubie(50, 40, "DR");
+        edges[6] = new edgecubie(52, 43, "DB");
+        edges[7] = new edgecubie(46, 37, "DF");
+        edges[8] = new edgecubie(21, 32, "LB");
+        edges[9] = new edgecubie(23, 24, "LF");
+        edges[10] = new edgecubie(29, 30, "RB");
+        edges[11] = new edgecubie(27, 26, "RF");
         this.heuristic = CalculateHeuristic();
     }
 

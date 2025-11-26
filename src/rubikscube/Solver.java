@@ -9,7 +9,11 @@ public class Solver {
     static byte[][] eoSliceTable;
     static byte[][] coSliceTable;
 
+    static byte[][] epSliceTable;
+    static byte[][] cpSliceTable;
+
     static StringBuilder phase1sol = new StringBuilder();
+    static StringBuilder phase2sol = new StringBuilder();
 
     public static String Solve1(cubeState start){
         phase1sol.setLength(0);
@@ -19,7 +23,8 @@ public class Solver {
             int distance = search(start, 0 ,threshold); //starting distance of 0 from start
 
             if(distance == -1){
-                return phase1sol.reverse().toString();
+//                return phase1sol.reverse().toString();
+                return phase1sol.toString();
             }
 
             if(distance == 12){
@@ -41,7 +46,9 @@ public class Solver {
             boolean verified = Phase1Verifier.verify(node);
             if (!verified) System.out.println("WARNING: Solver claims success but state is invalid!");
             while(node.parent!=null){
-                phase1sol.append(node.Move);
+//                phase1sol.append(node.Move);
+//                node = node.parent;
+                phase1sol.insert(0, node.Move); // Insert at beginning
                 node = node.parent;
             }
             return -1;
@@ -72,6 +79,70 @@ public class Solver {
         return Math.max(edgedistance, cornerdistance);
     }
 
+    private static int search2(cubeState node, int g, int threshold){
+        int h = getHeuristic2(node);
+        int f = g + h;
+        if(f>threshold){
+            return f;
+        }
+
+        if(h==0){
+            if(node.cube.isSolved()){
+                System.out.println("Cube successfully solved");
+            }
+            else{
+                System.out.println("Cube not solved but program claims it is");
+            }
+            while(node.parent!=null){
+                phase2sol.append(node.Move);
+                node = node.parent;
+            }
+            return -1;
+        }
+
+        int min = Integer.MAX_VALUE;
+
+        for(cubeState neighbour : node.getNeighbours2()){
+            int res = search2(neighbour, g+1, threshold);
+            if(res==-1){
+                return -1;
+            }
+            if(res<min){
+                min = res;
+            }
+        }
+        return min;
+    }
+
+    public static String Solve2(cubeState phase1){
+        phase2sol.setLength(0);
+        int threshold = getHeuristic2(phase1);
+
+        while(true){
+            int distance = search2(phase1, 0 ,threshold); //starting distance of 0 from start
+
+            if(distance == -1){
+                return phase2sol.reverse().toString();
+            }
+
+            if(distance == 20){
+                System.out.println("Error: no solution found");
+                return "";
+            }
+            threshold = distance;
+        }
+    }
+
+    public static int getHeuristic2(cubeState phase1){
+        int CP = Indexer.getCornerPermutationIndex(phase1);
+        int EP = Indexer.getEdgePermutationIndex(phase1);
+        int slice = Indexer.getSlicePermutationIndex(phase1);
+
+        int edgedistance = epSliceTable[EP][slice];
+        int cornerdistance = cpSliceTable[CP][slice];
+
+        return Math.max(edgedistance, cornerdistance);
+    }
 
     public static String Solve(cubeState start){
         long startTime = System.nanoTime();
@@ -138,8 +209,7 @@ public class Solver {
         int[][] eoMoves = MoveTable.edgeOrientationMoveTable(root);
         int[][] sliceMoves = MoveTable.sliceMoveTable(root);
 
-        coSliceTable = PruningTable.CornerOrientationSlicePruning(coMoves, sliceMoves);
-        eoSliceTable = PruningTable.EdgeOrientationSlicePruning(eoMoves, sliceMoves);
+
 
         File input = new File(args[0]);
         try{
@@ -148,15 +218,20 @@ public class Solver {
                 System.out.println(i);
                 RubiksCube cube = new RubiksCube(args[i]);
                 cubeState start = new cubeState(cube);
-//            System.out.println(cube.hashCode());
-//            System.out.println(cube.toString());
-//            System.out.println(cube.clone());
-//            start.cube.applyMoves(Solve(start));
-//            System.out.println(start.cube.toString());
-                String solution = Solve1(start);
-                System.out.println(solution);
-                start.cube.applyMoves(solution);
-                System.out.println(start.cube.toString());
+                coSliceTable = PruningTable.CornerOrientationSlicePruning(coMoves, sliceMoves);
+                eoSliceTable = PruningTable.EdgeOrientationSlicePruning(eoMoves, sliceMoves);
+                String phase1solution = Solve1(start);
+                cube.applyMoves(phase1solution);
+                cubeState phase1 = new cubeState(cube);
+                int [][] cpMoves = MoveTable.cornerPermutationMoveTable(root);
+                int [][] epMoves = MoveTable.edgePermutationTable(root);
+                int [][] sliceMoves2 = MoveTable.sliceEdgePermutationTable(root);
+                cpSliceTable = PruningTable.CornerPermutationSlicePruning(cpMoves, sliceMoves2);
+                epSliceTable = PruningTable.EdgePermutationSlicePruning(epMoves, sliceMoves2);
+                String phase2solution = Solve2(phase1);
+                System.out.println(phase1solution + phase2solution);
+                cube.applyMoves(phase2solution);
+//                System.out.println(cube);
                 long endTime = System.nanoTime();
                 long totalTimeNanos = endTime - startTime;
                 double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;

@@ -21,7 +21,7 @@ public class Phase1Verifier {
         // 3. Create a Phase 1 Solved cube (but not fully solved)
         // Moves like R2, L2, U, D, F2, B2 preserve Phase 1
         RubiksCube g1 = new RubiksCube();
-        g1.applyMoves("RRUFFDBBLL");
+        g1.applyMoves("RRUFFDBBLLUUDDUUUDDD");
         cubeState phase1State = new cubeState(g1);
 
         System.out.println("\nChecking Valid G1 Cube (R2 U F2 D B2 L2)...");

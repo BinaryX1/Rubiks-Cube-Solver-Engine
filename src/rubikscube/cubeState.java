@@ -374,6 +374,34 @@ public class cubeState implements Comparable<cubeState>{
         return neighbours;
     }
 
+    public HashSet<cubeState> getNeighbours2(){
+        HashSet<cubeState> neighbours2 = new HashSet<cubeState>();
+        String[] moves = new String[10];
+        moves[0] = "U";
+        moves[1] = "D";
+        moves[2] = "FF";
+        moves[3] = "BB";
+        moves[4] = "RR";
+        moves[5] = "LL";
+        moves[6] = "UU";
+        moves[7] = "DD";
+        moves[8] = "UUU";
+        moves[9] = "DDD";
+        RubiksCube temp = new RubiksCube();
+        for(String move : moves){
+            if(parent!=null) {
+                if (Objects.equals(move, parent.Move)) {
+                    continue;
+                }
+            }
+            temp.copyFrom(this.cube);
+            temp.applyMoves(move);
+            cubeState tempState = new cubeState(temp.clone(), this, move);
+            neighbours2.add(tempState);
+        }
+        return neighbours2;
+    }
+
     public cornercubie getCornercubiebytruecorner(String corner){
         for(cornercubie c : corners){
             if(c.truecorner.equals(corner)){

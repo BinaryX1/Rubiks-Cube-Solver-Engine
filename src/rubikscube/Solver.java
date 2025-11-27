@@ -1,6 +1,7 @@
 package rubikscube;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -192,7 +193,7 @@ public class Solver {
     }
 
 	public static void main(String[] args) {
-
+        long startTime = System.nanoTime();
 		if (args.length < 2) {
 			System.out.println("File names are not specified");
 			System.out.println("usage: java " + MethodHandles.lookup().lookupClass().getName() + " input_file output_file");
@@ -209,41 +210,76 @@ public class Solver {
         int[][] eoMoves = MoveTable.edgeOrientationMoveTable(root);
         int[][] sliceMoves = MoveTable.sliceMoveTable(root);
 
-
-
-        File input = new File(args[0]);
-        try{
-            for(int i = 0; i < args.length; i++){
-                long startTime = System.nanoTime();
-                System.out.println(i);
-                RubiksCube cube = new RubiksCube(args[i]);
-                cubeState start = new cubeState(cube);
-                coSliceTable = PruningTable.CornerOrientationSlicePruning(coMoves, sliceMoves);
-                eoSliceTable = PruningTable.EdgeOrientationSlicePruning(eoMoves, sliceMoves);
-                String phase1solution = Solve1(start);
-                cube.applyMoves(phase1solution);
-                cubeState phase1 = new cubeState(cube);
-                int [][] cpMoves = MoveTable.cornerPermutationMoveTable(root);
-                int [][] epMoves = MoveTable.edgePermutationTable(root);
-                int [][] sliceMoves2 = MoveTable.sliceEdgePermutationTable(root);
-                cpSliceTable = PruningTable.CornerPermutationSlicePruning(cpMoves, sliceMoves2);
-                epSliceTable = PruningTable.EdgePermutationSlicePruning(epMoves, sliceMoves2);
-                String phase2solution = Solve2(phase1);
-                System.out.println(phase1solution + phase2solution);
-                cube.applyMoves(phase2solution);
-                System.out.println(cube);
-                long endTime = System.nanoTime();
-                long totalTimeNanos = endTime - startTime;
-                double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;
-                System.out.println("Execution time in milliseconds: " + totalTimeMillis);
+        int [][] cpMoves = MoveTable.cornerPermutationMoveTable(root);
+        int [][] epMoves = MoveTable.edgePermutationTable(root);
+        int [][] sliceMoves2 = MoveTable.sliceEdgePermutationTable(root);
+        try {
+            RubiksCube cube = new RubiksCube(args[0]);
+            cubeState start = new cubeState(cube);
+            coSliceTable = PruningTable.CornerOrientationSlicePruning(coMoves, sliceMoves);
+            eoSliceTable = PruningTable.EdgeOrientationSlicePruning(eoMoves, sliceMoves);
+            String phase1solution = Solve1(start);
+            cube.applyMoves(phase1solution);
+            cubeState phase1 = new cubeState(cube);
+            cpSliceTable = PruningTable.CornerPermutationSlicePruning(cpMoves, sliceMoves2);
+            epSliceTable = PruningTable.EdgePermutationSlicePruning(epMoves, sliceMoves2);
+            String phase2solution = Solve2(phase1);
+            cube.applyMoves(phase2solution);
+            System.out.println(cube);
+            String solution = phase1solution + phase2solution;
+            System.out.println(solution);
+            try(FileWriter writer = new FileWriter(args[1])){
+                writer.write(solution);
+                System.out.println("Wrote to file");
             }
+            catch(IOException e) {
+                System.out.println("An error occured");
+            }
+
+            long endTime = System.nanoTime();
+            long totalTimeNanos = endTime - startTime;
+            double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;
+            System.out.println("Execution time in milliseconds: " + totalTimeMillis);
         }
         catch (IOException e){
             System.out.println("Could not open file");
         }
-        catch(IncorrectFormatException e){
+        catch(IncorrectFormatException e) {
             System.out.println("Wrong format");
         }
+//
+//        try{
+//            for(int i = 0; i < args.length; i++){
+//                long startTime = System.nanoTime();
+//                System.out.println(i);
+//                RubiksCube cube = new RubiksCube(args[i]);
+//                cubeState start = new cubeState(cube);
+//                coSliceTable = PruningTable.CornerOrientationSlicePruning(coMoves, sliceMoves);
+//                eoSliceTable = PruningTable.EdgeOrientationSlicePruning(eoMoves, sliceMoves);
+//                String phase1solution = Solve1(start);
+//                cube.applyMoves(phase1solution);
+//                cubeState phase1 = new cubeState(cube);
+//                int [][] cpMoves = MoveTable.cornerPermutationMoveTable(root);
+//                int [][] epMoves = MoveTable.edgePermutationTable(root);
+//                int [][] sliceMoves2 = MoveTable.sliceEdgePermutationTable(root);
+//                cpSliceTable = PruningTable.CornerPermutationSlicePruning(cpMoves, sliceMoves2);
+//                epSliceTable = PruningTable.EdgePermutationSlicePruning(epMoves, sliceMoves2);
+//                String phase2solution = Solve2(phase1);
+//                System.out.println(phase1solution + phase2solution);
+//                cube.applyMoves(phase2solution);
+//                System.out.println(cube);
+//                long endTime = System.nanoTime();
+//                long totalTimeNanos = endTime - startTime;
+//                double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;
+//                System.out.println("Execution time in milliseconds: " + totalTimeMillis);
+//            }
+//        }
+//        catch (IOException e){
+//            System.out.println("Could not open file");
+//        }
+//        catch(IncorrectFormatException e){
+//            System.out.println("Wrong format");
+//        }
 
     }
 }

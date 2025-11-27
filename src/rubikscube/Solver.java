@@ -231,7 +231,7 @@ public class Solver {
                 String phase2solution = Solve2(phase1);
                 System.out.println(phase1solution + phase2solution);
                 cube.applyMoves(phase2solution);
-//                System.out.println(cube);
+                System.out.println(cube);
                 long endTime = System.nanoTime();
                 long totalTimeNanos = endTime - startTime;
                 double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;

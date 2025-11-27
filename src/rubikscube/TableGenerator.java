@@ -1,5 +1,7 @@
 package rubikscube;
 
+//Used previously when trying manhattan distance for A* heuristic, scrapped and no longer used
+
 public class TableGenerator {
     public static void main(String[] args) {
         System.out.println("Generating Manhattan Distance Table...");

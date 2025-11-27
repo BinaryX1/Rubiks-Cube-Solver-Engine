@@ -49,7 +49,7 @@ public class cubeState implements Comparable<cubeState>{
                 return true;
             }
 
-            if (i == 24 || i == 26 || i == 30 || i == 32){
+            if (i == 24 || i == 26 || i == 30 || i == 32){ //Look at the middle slice faces
                 return true;
             }
 
@@ -147,7 +147,7 @@ public class cubeState implements Comparable<cubeState>{
                     }
                     else if ((i >= 12 && i<= 14) || (i >= 24 && i <= 26) || (i >= 36 && i <= 38)) //On front face (W)
                         return 2;
-                    else //On back face (Y)
+                    else //On back face
                         return 2;
                 }
             }
@@ -491,7 +491,7 @@ public class cubeState implements Comparable<cubeState>{
             }
         }
         return moves;
-    }
+    } //Previously used for A* algorithm but scrapped
 
     @Override
     public int compareTo(cubeState o) {
@@ -512,13 +512,11 @@ public class cubeState implements Comparable<cubeState>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         cubeState that = (cubeState) o;
-        // Delegate equality to the internal cube
         return this.cube.equals(that.cube);
     }
 
     @Override
     public int hashCode() {
-        // Delegate hash to the internal cube
         return this.cube.hashCode();
-    }
+    } //Used for getneighbours
 }

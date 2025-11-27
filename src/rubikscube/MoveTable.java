@@ -224,16 +224,12 @@ public class MoveTable {
         long startTime = System.nanoTime();
         System.out.println("--- Testing Phase 2 Corner Permutation Table ---");
 
-        // 1. Generate the Table
         RubiksCube solved = new RubiksCube();
         cubeState root = new cubeState(solved);
 
         System.out.println("Generating CP Table...");
         int[][] cpTable = MoveTable.cornerPermutationMoveTable(root);
 
-        // 2. Verify Completeness
-        // Valid Phase 2 Move Indices:
-        // U(4), D(5), F2(6), B2(7), R2(8), L2(9), U2(10), D2(11), U'(16), D'(17)
         int[] validMoves = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
         int totalStates = 40320; // 8!
@@ -320,9 +316,9 @@ public class MoveTable {
 //        System.out.println("Total Reachable States: " + reachedStates + " / 40320");
 //
 //        if (reachedStates == 40320 && constraintsPassed) {
-//            System.out.println("✅ PASSED: Phase 2 Edge Permutation Graph is fully connected and valid.");
+//            System.out.println(" PASSED: Phase 2 Edge Permutation Graph is fully connected and valid.");
 //        } else {
-//            System.out.println("❌ FAILED: Table is incomplete or invalid.");
+//            System.out.println(" FAILED: Table is incomplete or invalid.");
 //        }
 
 

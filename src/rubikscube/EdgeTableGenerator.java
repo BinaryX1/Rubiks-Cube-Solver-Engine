@@ -2,8 +2,6 @@ package rubikscube;
 
 public class EdgeTableGenerator {
     public static void main(String[] args) {
-        System.out.println("Generating Edge Manhattan Distance Table...");
-        System.out.println("This involves 144 BFS searches. It may take 1-2 minutes. Please wait.\n");
 
         String[] edges = {
                 "UL", // 0

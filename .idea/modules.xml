@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/cmpt225-project-fall25.iml" filepath="$PROJECT_DIR$/cmpt225-project-fall25.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Rubiks Cube Solver.iml" filepath="$PROJECT_DIR$/Rubiks Cube Solver.iml" />
     </modules>
   </component>
 </project>

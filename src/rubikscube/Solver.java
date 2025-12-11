@@ -209,7 +209,7 @@ public class Solver {
         int[][] coMoves = MoveTable.CornerOrientationMoveTable(root);
         int[][] eoMoves = MoveTable.edgeOrientationMoveTable(root);
         int[][] sliceMoves = MoveTable.sliceMoveTable(root);
-
+//
         int [][] cpMoves = MoveTable.cornerPermutationMoveTable(root);
         int [][] epMoves = MoveTable.edgePermutationTable(root);
         int [][] sliceMoves2 = MoveTable.sliceEdgePermutationTable(root);
@@ -267,7 +267,6 @@ public class Solver {
 //                String phase2solution = Solve2(phase1);
 //                System.out.println(phase1solution + phase2solution);
 //                cube.applyMoves(phase2solution);
-//                System.out.println(cube);
 //                long endTime = System.nanoTime();
 //                long totalTimeNanos = endTime - startTime;
 //                double totalTimeMillis = (double) totalTimeNanos / 1_000_000.0;
